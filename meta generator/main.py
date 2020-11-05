@@ -1,6 +1,7 @@
 import sys
 import os
 import pickle
+from pathlib import Path
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -15,15 +16,18 @@ from packages import sub_classes
 
 from packages.keyword_generator import keywords_generators
 
-base = os.path.dirname(os.path.abspath(__file__))
+#base = os.path.dirname(os.path.abspath(__file__))
+base = str(Path(__file__).absolute().parent)
+print(base)
+
 youtube_video_url = str(sys.argv[1])
-le_filename = base +"/packages/main_classes/le"
+le_filename = str(Path(base +"/packages/main_classes/le"))
 le = pickle.load(open(le_filename, "rb"))
 
-model_filename = base + "/packages/main_classes/model"
+model_filename = str(Path(base + "/packages/main_classes/model"))
 model = pickle.load(open(model_filename, "rb"))
 
-tfidf_filename = base + "/packages/main_classes/tfidf"
+tfidf_filename = str(Path(base + "/packages/main_classes/tfidf"))
 tfidf_text = pickle.load(open(tfidf_filename, "rb"))
 
 
