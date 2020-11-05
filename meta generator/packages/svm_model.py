@@ -1,4 +1,6 @@
 import os
+import  pathlib
+import  sys
 import shutil
 
 import pandas as pd
@@ -30,6 +32,17 @@ stop_words = set(stopwords.words('english'))
 
 r = Rake(max_length=3, ranking_metric= Metric.WORD_DEGREE)
 
+save_filepath =  str(sys.argv[0])
+save_filepath = save_filepath.split("\\")
+save_filepath = "\\".join(save_filepath[0:-1])
+
+print(save_filepath)
+
+if not os.path.isdir(save_filepath + '\\output'):
+    os.makedirs(save_filepath + '\\output')
+
+save_filepath = save_filepath + '\\output'
+
 def get_clean_text(text):
   text = text.lower()
   text = re.sub(r'\d+', '', text) 
@@ -42,27 +55,27 @@ def get_clean_text(text):
   return text
 
 def get_youtube_video(video_file_url):
-  if not os.path.isdir('video'):
-    os.makedirs('video')
+  if not os.path.isdir(save_filepath + '\\video'):
+    os.makedirs(save_filepath + '\\video')
   
   video=pafy.new(video_file_url)
   Yt_video = video.getbest(preftype="mp4")
   filename = get_clean_text(Yt_video.title) + ".mp4"
-  base = os.getcwd()
-  path = base + "\\video" +"\\"+ filename
+  #base = os.getcwd()
+  path = save_filepath + "\\video" +"\\"+ filename
   Yt_video.download(filepath=path)
   return path
 
 def get_text_from_video(filepath):
   recognized_text = ""
-  if os.path.isdir('chunk'):
-    shutil.rmtree('chunk')
-    os.makedirs('chunk')
+  if os.path.isdir(save_filepath + '\\chunk'):
+    shutil.rmtree(save_filepath + '\\chunk')
+    os.makedirs(save_filepath + '\\chunk')
   else:
-    os.makedirs('chunk')
+    os.makedirs(save_filepath + '\\chunk')
   
-  if not os.path.isdir('audio'):
-    os.makedirs('audio')
+  if not os.path.isdir(save_filepath + '\\audio'):
+    os.makedirs(save_filepath + '\\audio')
   
 
   speech_recognizer  = sr.Recognizer()
@@ -71,8 +84,8 @@ def get_text_from_video(filepath):
   name = name.split("\\")[-1]
   name = name.strip(".mp4")
   base = os.getcwd()
-  video.audio.write_audiofile(base + "\\audio" + "\\" + name + ".wav",verbose=False)
-  audio = AudioSegment.from_wav(base + "\\audio" + "\\" + name + ".wav")
+  video.audio.write_audiofile(save_filepath + "\\audio" + "\\" + name + ".wav",verbose=False)
+  audio = AudioSegment.from_wav(save_filepath + "\\audio" + "\\" + name + ".wav")
 
   chunks = split_on_silence(audio,
         min_silence_len = 500,
@@ -80,7 +93,7 @@ def get_text_from_video(filepath):
         keep_silence=500)
 
   for i, chunk in enumerate(chunks):
-    filename = os.path.join(base, "chunk")
+    filename = os.path.join(save_filepath, "chunk")
     filename = os.path.join(filename,f"chunk{i}.wav")
     chunk.export(filename, format="wav")
     with sr.AudioFile(filename) as source:
@@ -95,7 +108,7 @@ def get_text_from_video(filepath):
         text = f"{text.capitalize()}. "
         recognized_text += text
   
-  audio_filepath = base + "\\audio" + "\\" + name + ".wav"
+  audio_filepath = save_filepath + "\\audio" + "\\" + name + ".wav"
   return recognized_text,audio_filepath
 
 def get_keywords(text):

@@ -134,3 +134,4 @@ meta generator/video/
 meta generator/chunk/
 meta generator/packages/__pycache__/
 meta generator/Data.json
+meta generator/output/
