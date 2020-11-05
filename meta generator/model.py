@@ -15,7 +15,6 @@ from packages import sub_classes
 from packages.keyword_generator import keywords_generators
 
 youtube_video_url = str(sys.argv[1])
-print(youtube_video_url)
 le_filename = ".//packages//main_classes//le"
 le = pickle.load(open(le_filename, "rb"))
 
