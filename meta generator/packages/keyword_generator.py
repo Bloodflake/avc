@@ -25,7 +25,9 @@ import pke
 import spacy
 import pytextrank
 
-filee = open(".//packages//custom_stopword.txt", "r")
+base = os.getcwd()
+
+filee = open(base + "//packages//custom_stopword.txt", "r")
 try:
     content = filee.read()
     custom_stopwords = content.split(",")
