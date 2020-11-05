@@ -1,5 +1,5 @@
 import os
-import  pathlib
+from  pathlib import Path
 import  sys
 import shutil
 
@@ -33,15 +33,17 @@ stop_words = set(stopwords.words('english'))
 r = Rake(max_length=3, ranking_metric= Metric.WORD_DEGREE)
 
 save_filepath =  str(sys.argv[0])
-save_filepath = save_filepath.split("\\")
-save_filepath = "\\".join(save_filepath[0:-1])
+save_filepath = Path(save_filepath)
+print("In svm model ",str(save_filepath.parent))
+save_filepath = str(save_filepath.parent)
+if(save_filepath == ""):
+  save_filepath = os.getcwd()
 
-print(save_filepath)
 
-if not os.path.isdir(save_filepath + '\\output'):
-    os.makedirs(save_filepath + '\\output')
+if not os.path.isdir(str(save_filepath) + str(Path('/output'))):
+    os.makedirs(str(save_filepath) + str(Path('/output')))
 
-save_filepath = save_filepath + '\\output'
+save_filepath = str(save_filepath) + str(Path('/output'))
 
 def get_clean_text(text):
   text = text.lower()
@@ -55,27 +57,27 @@ def get_clean_text(text):
   return text
 
 def get_youtube_video(video_file_url):
-  if not os.path.isdir(save_filepath + '\\video'):
-    os.makedirs(save_filepath + '\\video')
+  if not os.path.isdir(str(save_filepath) + str(Path('/video'))):
+    os.makedirs(str(save_filepath) + str(Path('/video')))
   
   video=pafy.new(video_file_url)
   Yt_video = video.getbest(preftype="mp4")
   filename = get_clean_text(Yt_video.title) + ".mp4"
   #base = os.getcwd()
-  path = save_filepath + "\\video" +"\\"+ filename
+  path = str(save_filepath) + str(Path("/video/")) + filename
   Yt_video.download(filepath=path)
   return path
 
 def get_text_from_video(filepath):
   recognized_text = ""
-  if os.path.isdir(save_filepath + '\\chunk'):
-    shutil.rmtree(save_filepath + '\\chunk')
-    os.makedirs(save_filepath + '\\chunk')
+  if os.path.isdir(str(save_filepath) + str(Path('/chunk'))):
+    shutil.rmtree(str(save_filepath) + str(Path('/chunk')))
+    os.makedirs(str(save_filepath) + str(Path('/chunk')))
   else:
-    os.makedirs(save_filepath + '\\chunk')
+    os.makedirs(str(save_filepath) + str(Path('/chunk')))
   
-  if not os.path.isdir(save_filepath + '\\audio'):
-    os.makedirs(save_filepath + '\\audio')
+  if not os.path.isdir(str(save_filepath) + str(Path('/audio'))):
+    os.makedirs(str(save_filepath) + str(Path('/audio')))
   
 
   speech_recognizer  = sr.Recognizer()
@@ -84,8 +86,8 @@ def get_text_from_video(filepath):
   name = name.split("\\")[-1]
   name = name.strip(".mp4")
   base = os.getcwd()
-  video.audio.write_audiofile(save_filepath + "\\audio" + "\\" + name + ".wav",verbose=False)
-  audio = AudioSegment.from_wav(save_filepath + "\\audio" + "\\" + name + ".wav")
+  video.audio.write_audiofile(str(save_filepath) + str(Path("/audio/")) + name + ".wav",verbose=False)
+  audio = AudioSegment.from_wav(str(save_filepath) + str(Path("/audio/")) + name + ".wav")
 
   chunks = split_on_silence(audio,
         min_silence_len = 500,
@@ -108,7 +110,7 @@ def get_text_from_video(filepath):
         text = f"{text.capitalize()}. "
         recognized_text += text
   
-  audio_filepath = save_filepath + "\\audio" + "\\" + name + ".wav"
+  audio_filepath = str(save_filepath) + str(Path("/audio/")) + name + ".wav"
   return recognized_text,audio_filepath
 
 def get_keywords(text):
