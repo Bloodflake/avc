@@ -17,13 +17,13 @@ from packages.keyword_generator import keywords_generators
 
 base = os.path.dirname(os.path.abspath(__file__))
 youtube_video_url = str(sys.argv[1])
-le_filename = base +"\\packages\\main_classes\\le"
+le_filename = base +"/packages/main_classes/le"
 le = pickle.load(open(le_filename, "rb"))
 
-model_filename = base + "\\packages\\main_classes\\model"
+model_filename = base + "/packages/main_classes/model"
 model = pickle.load(open(model_filename, "rb"))
 
-tfidf_filename = base + "\\packages\\main_classes\\tfidf"
+tfidf_filename = base + "/packages/main_classes/tfidf"
 tfidf_text = pickle.load(open(tfidf_filename, "rb"))
 
 
