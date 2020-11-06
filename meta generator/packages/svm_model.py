@@ -36,7 +36,7 @@ save_filepath =  str(sys.argv[0])
 save_filepath = Path(save_filepath)
 print("In svm model ",str(save_filepath.parent))
 save_filepath = str(save_filepath.parent)
-if(save_filepath == ""):
+if(save_filepath == "."):
   save_filepath = os.getcwd()
 
 

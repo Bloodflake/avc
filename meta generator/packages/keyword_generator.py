@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import shutil
 import pafy
 import speech_recognition as sr 
@@ -25,8 +26,9 @@ import pke
 import spacy
 import pytextrank
 
-base = os.path.dirname(os.path.abspath(__file__))
-filee = open(os.path.join(base + "\\custom_stopword.txt"), "r")
+base = str(Path(__file__).absolute().parent)
+filee = open(str(base) + str(Path("/custom_stopword.txt")), "r")
+
 try:
     content = filee.read()
     custom_stopwords = content.split(",")
@@ -70,6 +72,8 @@ def keywords_generators(text, stoplist = stoplist, n = 30):
             keywords.append(w2[0])
   
     return keywords
+
+'''
 
 def get_youtube_video(video_file_url):
     if not os.path.isdir('video'):
@@ -137,3 +141,4 @@ def get_clean_text(text):
     text = ' '.join(text)
     return text
   
+'''
