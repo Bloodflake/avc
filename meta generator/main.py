@@ -52,9 +52,8 @@ meta = {
 
 pprint.pprint(meta)
 
-out_file = open("Data.json", "a")
-
-json.dump(meta, out_file, indent=2)
-out_file.write(",")
-out_file.write("\n")
-out_file.close()
+with open(str(Path(str(base) + "/output"  + "/" + "Data.json")), "a") as out_file:
+    json.dump(meta, out_file, indent=2)
+    out_file.write(",")
+    out_file.write("\n")
+    out_file.close()
