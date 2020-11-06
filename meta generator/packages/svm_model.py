@@ -34,7 +34,7 @@ r = Rake(max_length=3, ranking_metric= Metric.WORD_DEGREE)
 
 save_filepath =  str(sys.argv[0])
 save_filepath = Path(save_filepath)
-print("In svm model ",str(save_filepath.parent))
+
 save_filepath = str(save_filepath.parent)
 if(save_filepath == "."):
   save_filepath = os.getcwd()
@@ -60,12 +60,12 @@ def get_youtube_video(video_file_url):
   if not os.path.isdir(str(save_filepath) + str(Path('/video'))):
     os.makedirs(str(save_filepath) + str(Path('/video')))
   
-  video=pafy.new(video_file_url)
+  video = pafy.new(video_file_url)
   Yt_video = video.getbest(preftype="mp4")
   filename = get_clean_text(Yt_video.title) + ".mp4"
   #base = os.getcwd()
-  path = str(save_filepath) + str(Path("/video/")) + filename
-  Yt_video.download(filepath=path)
+  path = str(save_filepath) + str(Path("/video" + "/" + filename)) 
+  Yt_video.download(filepath = path)
   return path
 
 def get_text_from_video(filepath):
@@ -83,11 +83,11 @@ def get_text_from_video(filepath):
   speech_recognizer  = sr.Recognizer()
   video = mp.VideoFileClip(filepath)
   name = video.filename
-  name = name.split("\\")[-1]
+  name = name.split(str(Path("/")))[-1]
   name = name.strip(".mp4")
   base = os.getcwd()
-  video.audio.write_audiofile(str(save_filepath) + str(Path("/audio/")) + name + ".wav",verbose=False)
-  audio = AudioSegment.from_wav(str(save_filepath) + str(Path("/audio/")) + name + ".wav")
+  video.audio.write_audiofile(str(save_filepath) + str(Path("/audio" + "/" + name)) + ".wav",verbose=False)
+  audio = AudioSegment.from_wav(str(save_filepath) + str(Path("/audio" + "/" + name)) + ".wav")
 
   chunks = split_on_silence(audio,
         min_silence_len = 500,
@@ -110,7 +110,7 @@ def get_text_from_video(filepath):
         text = f"{text.capitalize()}. "
         recognized_text += text
   
-  audio_filepath = str(save_filepath) + str(Path("/audio/")) + name + ".wav"
+  audio_filepath = str(save_filepath) + str(Path("/audio" + "/" + name)) + ".wav"
   return recognized_text,audio_filepath
 
 def get_keywords(text):
